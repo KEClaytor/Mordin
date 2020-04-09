@@ -1,6 +1,7 @@
 import digitalio
 
-class Button():
+
+class Button:
     """ Button convenience class.
 
     Create a button:
