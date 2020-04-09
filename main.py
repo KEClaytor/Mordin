@@ -22,6 +22,13 @@ sine_length = 500
 sine_wave = [int((1 + math.sin(2 * math.pi * ii / sine_length)) * (2 ** 15 - 1)) for ii in range(sine_length)]
 square_wave = [(2 ** 15 - 1) if math.sin(2 * math.pi * ii / sine_length) > 0 else 0 for ii in range(sine_length)]
 
+def buzz_till_button():
+    while not button.pressed():
+        button.update()
+        for _ in range(2):
+            for ii in range(0, 65535, 64):
+                analog_out.value = ii
+
 RED = (255, 0, 0)
 YELLOW = (255, 150, 0)
 GREEN = (0, 255, 0)
@@ -56,6 +63,7 @@ o_step = 0.01
 
 mode = "ambient"
 timer_limit = 0
+timer_step = 5
 timer_start = time.monotonic()
 
 while True:
@@ -64,13 +72,13 @@ while True:
 
     button.update()
     if button.just_pressed():
-        mode = "ambient"
+        mode = "timer"
+        timer_limit = timer_step
         t0 = time.monotonic()
         while time.monotonic() - t0 < 1:
             button.update()
             if button.just_pressed():
-                mode = "timer"
-                timer_limit += 5
+                timer_limit += timer_step
                 console.brightness = timer_limit / 60.0
                 console.show()
                 t0 = time.monotonic()
@@ -98,6 +106,7 @@ while True:
         if (t - timer_start) < timer_limit:
             console.brightness = remaining / timer_limit
         else:
+            buzz_till_button()
             mode = "ambient"
             console.brightness = c_brit
         console.show()
