@@ -35,6 +35,8 @@ c_hue = random.random()
 c_delta = 0.02
 c_step = 0.001
 
+o_varb = 0.1
+o_brit = 0.3
 o_hue = random.random()
 o_step = 0.01
 
@@ -42,6 +44,7 @@ while True:
 
     o_hue += o_step * (2*random.random() - 1)
     omnitool[0] = fancy.palette_lookup(palette, o_hue).pack()
+    omnitool.brightness = o_brit + o_varb * (2*random.random() - 1)
     omnitool.show()
 
     console[0] = fancy.CHSV(c_hue - c_delta).pack()
